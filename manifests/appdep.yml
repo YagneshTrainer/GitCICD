@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviewapp-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviewapp
+  template:
+    metadata:
+      labels:
+        app: reviewapp
+    spec:
+      containers:
+      - name: reviewapp
+        image: innovativeacademy/reviewapp:V1
+        resources:
+          requests: 
+            memory: "250Mi"
+            cpu: "200m"
+          limits:
+            memory: "400Mi"
+            cpu: "300m"
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+
+
